@@ -288,8 +288,8 @@ function App() {
 
       <aside className="control-panel">
         <header>
-          <p>Roleta</p>
-          <h1>Escolha, adicione e sorteie</h1>
+          <p>Rift Roulette</p>
+          <h1>Escolha, filtre e sorteie</h1>
         </header>
 
         <details className="control-section" open>
