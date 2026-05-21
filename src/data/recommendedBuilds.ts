@@ -12,6 +12,30 @@ const buildByStyle = {
   jungleAd: ['Cutelo Negro', 'Danca da Morte', 'Cegar, o Cutelo Sombrio', 'Sterak', 'Anjo Guardiao'],
 }
 
+const aramBuildByStyle: Record<keyof typeof buildByStyle, string[]> = {
+  marksman: ['Mata-Craquens', 'Gume do Infinito', 'Danca da Morte', 'Lembrete Mortal', 'Anjo Guardiao'],
+  mage: ['Tormento de Liandry', 'Chama Sombria', 'Capuz da Morte de Rabadon', 'Cajado do Vazio', 'Ampulheta de Zhonya'],
+  assassin: ['Oportunidade', 'Gume do Anoitecer', 'Rancor de Serylda', 'Arco Axiomatico', 'Anjo Guardiao'],
+  fighter: ['Cutelo Negro', 'Danca da Morte', 'Sterak', 'Cegar, o Cutelo Sombrio', 'Anjo Guardiao'],
+  tank: ['Coracao Congelado', 'Jak Sho, o Inconstante', 'Armadura de Espinhos', 'Forca da Natureza', 'Pressagio de Randuin'],
+  enchanter: ['Regenerador de Pedra Lunar', 'Redencao', 'Turibulo Ardente', 'Bencao de Mikael', 'Renovacao da Vigilia'],
+  supportTank: ['Medalhao dos Solari de Ferro', 'Juramento do Cavaleiro', 'Convergencia de Zeke', 'Redencao', 'Couraca do Defunto'],
+  jungleAp: ['Tormento de Liandry', 'Dente de Na Nashor', 'Ampulheta de Zhonya', 'Capuz da Morte de Rabadon', 'Cajado do Vazio'],
+  jungleAd: ['Cutelo Negro', 'Danca da Morte', 'Sterak', 'Rancor de Serylda', 'Anjo Guardiao'],
+}
+
+const aramAugmentsByStyle: Record<keyof typeof buildByStyle, string[]> = {
+  marksman: ['Alcance extra', 'Velocidade de ataque', 'Dano critico', 'Roubo de vida'],
+  mage: ['Aceleracao de habilidade', 'Explosao arcana', 'Mana sustentada', 'Penetracao magica'],
+  assassin: ['Execucao', 'Mobilidade', 'Dano explosivo', 'Reset de abate'],
+  fighter: ['Tenacidade', 'Dano sustentado', 'Roubo de vida', 'Escudo em combate'],
+  tank: ['Vida maxima', 'Resistencia adicional', 'Controle de grupo', 'Regeneracao'],
+  enchanter: ['Forca de cura e escudo', 'Aceleracao de habilidade', 'Mana sustentada', 'Protecao em area'],
+  supportTank: ['Tenacidade', 'Controle de grupo', 'Escudo em area', 'Resistencia adicional'],
+  jungleAp: ['Aceleracao de habilidade', 'Dano sustentado', 'Penetracao magica', 'Cura em combate'],
+  jungleAd: ['Dano sustentado', 'Tenacidade', 'Roubo de vida', 'Execucao'],
+}
+
 const championStyleOverrides: Record<string, keyof typeof buildByStyle> = {
   Ahri: 'mage',
   Akali: 'assassin',
@@ -101,15 +125,28 @@ const championStyleOverrides: Record<string, keyof typeof buildByStyle> = {
   Zyra: 'mage',
 }
 
-export function getRecommendedBuild(championId: string, lanes: LaneKey[] = []) {
+function getChampionStyle(championId: string, lanes: LaneKey[] = []): keyof typeof buildByStyle {
   const style = championStyleOverrides[championId]
 
-  if (style) return buildByStyle[style]
-  if (lanes.includes('bottom')) return buildByStyle.marksman
-  if (lanes.includes('support')) return buildByStyle.enchanter
-  if (lanes.includes('jungle')) return buildByStyle.jungleAd
-  if (lanes.includes('mid')) return buildByStyle.mage
-  if (lanes.includes('top')) return buildByStyle.fighter
+  if (style) return style
+  if (lanes.includes('bottom')) return 'marksman'
+  if (lanes.includes('support')) return 'enchanter'
+  if (lanes.includes('jungle')) return 'jungleAd'
+  if (lanes.includes('mid')) return 'mage'
+  if (lanes.includes('top')) return 'fighter'
 
-  return buildByStyle.fighter
+  return 'fighter'
+}
+
+export function getRecommendedBuild(championId: string, lanes: LaneKey[] = []) {
+  return buildByStyle[getChampionStyle(championId, lanes)]
+}
+
+export function getAramDisorderRecommendations(championId: string, lanes: LaneKey[] = []) {
+  const style = getChampionStyle(championId, lanes)
+
+  return {
+    items: aramBuildByStyle[style],
+    augments: aramAugmentsByStyle[style],
+  }
 }

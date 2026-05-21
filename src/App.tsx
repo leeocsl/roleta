@@ -3,7 +3,7 @@ import type { CSSProperties, FormEvent } from 'react'
 import { getChampionTheme } from './data/championThemes'
 import { champions, laneOptions, regionOptions } from './data/leagueChampions'
 import type { LaneKey, RegionKey } from './data/leagueChampions'
-import { getRecommendedBuild } from './data/recommendedBuilds'
+import { getAramDisorderRecommendations, getRecommendedBuild } from './data/recommendedBuilds'
 import './App.css'
 
 type WheelOption = {
@@ -24,6 +24,8 @@ type WheelLabelStyle = CSSProperties & {
   '--label-color': string
   '--label-shadow': string
 }
+
+type AppView = 'roulette' | 'builds'
 
 const palette = [
   '#2563eb',
@@ -74,7 +76,9 @@ function buildSegmentGradient(color: string, start: number, end: number, isDense
 }
 
 function App() {
+  const [currentView, setCurrentView] = useState<AppView>(() => (window.location.hash === '#builds' ? 'builds' : 'roulette'))
   const [options, setOptions] = useState<WheelOption[]>([])
+  const [buildSearch, setBuildSearch] = useState('')
   const [customOption, setCustomOption] = useState('')
   const [selectedPreset, setSelectedPreset] = useState('')
   const [selectedLane, setSelectedLane] = useState<LaneKey | ''>('')
@@ -111,10 +115,31 @@ function App() {
     regionOptions.find((region) => region.key === selectedRegion)?.label ??
     (selectedPreset === 'league' ? 'LOL' : 'LOL')
   const centerLabelClassName = centerLabel.length > 6 ? 'compact' : centerLabel.length > 4 ? 'medium' : ''
+  const selectedBuildChampion =
+    champions.find((champion) => champion.label.toLowerCase() === buildSearch.trim().toLowerCase()) ??
+    champions.find((champion) => champion.label.toLowerCase().includes(buildSearch.trim().toLowerCase())) ??
+    champions[0]
+  const normalBuild = getRecommendedBuild(selectedBuildChampion.id, selectedBuildChampion.lanes)
+  const aramDisorder = getAramDisorderRecommendations(selectedBuildChampion.id, selectedBuildChampion.lanes)
 
   useEffect(() => {
     loadLeaguePreset()
   }, [])
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentView(window.location.hash === '#builds' ? 'builds' : 'roulette')
+    }
+
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+
+  function navigateTo(view: AppView) {
+    setCurrentView(view)
+    window.history.pushState(null, '', view === 'builds' ? '#builds' : '#roulette')
+  }
 
   function loadLeaguePreset() {
     setOptions(champions)
@@ -210,7 +235,79 @@ function App() {
 
   return (
     <main className="app-shell">
-      <section className="workspace">
+      <section className={currentView === 'builds' ? 'workspace build-workspace' : 'workspace'}>
+        {currentView === 'builds' ? (
+          <div className="build-page">
+            <div className="build-hero">
+              <div>
+                <span>Rift Roulette</span>
+                <h1>Consulta de builds</h1>
+              </div>
+              <button type="button" onClick={() => navigateTo('roulette')}>
+                Voltar para roleta
+              </button>
+            </div>
+
+            <label className="champion-picker" htmlFor="build-champion">
+              <span>Digite um campeao</span>
+              <input
+                id="build-champion"
+                type="text"
+                list="champion-options"
+                value={buildSearch}
+                onChange={(event) => setBuildSearch(event.target.value)}
+                placeholder="Ex: Miss Fortune"
+              />
+              <datalist id="champion-options">
+                {champions.map((champion) => (
+                  <option key={champion.id} value={champion.label} />
+                ))}
+              </datalist>
+            </label>
+
+            <div className="champion-build-card">
+              {getOptionImage(selectedBuildChampion) && (
+                <img src={getOptionImage(selectedBuildChampion)} alt="" />
+              )}
+              <div>
+                <span>Campeao selecionado</span>
+                <h2>{selectedBuildChampion.label}</h2>
+              </div>
+            </div>
+
+            <div className="build-grid">
+              <section className="build-card">
+                <span>Normal Game</span>
+                <h2>Build recomendada</h2>
+                <div className="build-list large">
+                  {normalBuild.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </section>
+
+              <section className="build-card">
+                <span>ARAM: Desordem</span>
+                <h2>Itens recomendados</h2>
+                <div className="build-list large">
+                  {aramDisorder.items.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </section>
+
+              <section className="build-card wide">
+                <span>ARAM: Desordem</span>
+                <h2>Aprimoramentos recomendados</h2>
+                <div className="augment-list">
+                  {aramDisorder.augments.map((augment) => (
+                    <span key={augment}>{augment}</span>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
+        ) : (
         <div className="wheel-dock">
           <div className={isSpinning ? 'wheel-stage spinning' : 'wheel-stage'}>
             <div className="pointer" aria-hidden="true" />
@@ -294,6 +391,7 @@ function App() {
             )}
           </div>
         </div>
+        )}
       </section>
 
       <aside className="control-panel">
@@ -302,6 +400,25 @@ function App() {
           <h1>Escolha, filtre e sorteie</h1>
         </header>
 
+        <div className="view-switcher">
+          <button
+            type="button"
+            className={currentView === 'roulette' ? 'active' : ''}
+            onClick={() => navigateTo('roulette')}
+          >
+            Roleta
+          </button>
+          <button
+            type="button"
+            className={currentView === 'builds' ? 'active' : ''}
+            onClick={() => navigateTo('builds')}
+          >
+            Builds
+          </button>
+        </div>
+
+        {currentView === 'roulette' ? (
+          <>
         <details className="control-section" open>
           <summary>Filtros</summary>
           <div className="panel-section">
@@ -410,6 +527,13 @@ function App() {
             )}
           </div>
         </details>
+          </>
+        ) : (
+          <div className="build-side-card">
+            <span className="section-label">Consulta</span>
+            <p>Digite um campeao na tela de builds para ver recomendacoes de Normal Game e ARAM: Desordem.</p>
+          </div>
+        )}
       </aside>
 
       {pendingRemoval && (

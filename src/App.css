@@ -20,6 +20,166 @@
     #eef2f7;
 }
 
+.build-workspace {
+  align-items: stretch;
+}
+
+.build-page {
+  width: min(920px, 100%);
+  display: grid;
+  gap: 18px;
+}
+
+.build-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(91, 214, 209, 0.18), transparent 32%),
+    linear-gradient(135deg, #101a2d, #07101f);
+  color: #f8fafc;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+}
+
+.build-hero span,
+.champion-build-card span,
+.build-card > span {
+  color: #d8c48f;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.build-hero h1,
+.champion-build-card h2,
+.build-card h2 {
+  margin: 6px 0 0;
+  line-height: 1.05;
+}
+
+.build-hero h1 {
+  font-size: 38px;
+}
+
+.build-hero button,
+.view-switcher button {
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.build-hero button {
+  padding: 12px 16px;
+  color: #08111f;
+  background: #d8c48f;
+}
+
+.champion-picker {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+}
+
+.champion-picker span {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.champion-picker input {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.champion-picker input:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+  border-color: #2563eb;
+}
+
+.champion-build-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.1);
+}
+
+.champion-build-card img {
+  width: 86px;
+  height: 86px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22);
+}
+
+.champion-build-card h2 {
+  color: #0f172a;
+  font-size: 34px;
+}
+
+.build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.build-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+}
+
+.build-card.wide {
+  grid-column: 1 / -1;
+}
+
+.build-card h2 {
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.build-list.large span,
+.augment-list span {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.augment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.augment-list span {
+  border: 1px solid rgba(91, 214, 209, 0.45);
+  border-radius: 999px;
+  color: #0f172a;
+  background: rgba(91, 214, 209, 0.12);
+  font-weight: 900;
+}
+
 .wheel-dock {
   width: 100%;
   display: grid;
@@ -350,6 +510,43 @@
   margin: 8px 0 0;
   font-size: 34px;
   line-height: 1.05;
+}
+
+.view-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.view-switcher button {
+  min-height: 42px;
+  color: #334155;
+  background: transparent;
+}
+
+.view-switcher button.active {
+  color: #ffffff;
+  background: #0891b2;
+  box-shadow: 0 10px 24px rgba(8, 145, 178, 0.2);
+}
+
+.build-side-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.build-side-card p {
+  margin: 0;
+  color: #475569;
+  font-weight: 700;
 }
 
 .panel-section,
@@ -725,6 +922,20 @@
 
   .control-panel h1 {
     font-size: 28px;
+  }
+
+  .build-hero,
+  .champion-build-card,
+  .build-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .build-hero {
+    align-items: stretch;
+  }
+
+  .build-card.wide {
+    grid-column: auto;
   }
 
   .control-section {
