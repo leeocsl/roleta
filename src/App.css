@@ -284,6 +284,8 @@
 
 .history-card li {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
   gap: 8px;
   padding: 10px 0;
   border-top: 1px solid rgba(148, 163, 184, 0.28);
@@ -298,6 +300,14 @@
   color: #0f172a;
   font-size: 16px;
   line-height: 1.1;
+}
+
+.history-card li > img {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
 }
 
 .build-list {
@@ -755,6 +765,10 @@
   .add-form div,
   .modal-actions {
     grid-template-columns: 1fr;
+  }
+
+  .history-card li {
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .lane-grid {

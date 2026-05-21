@@ -36,6 +36,13 @@ const palette = [
   '#65a30d',
 ]
 
+function getOptionImage(option: WheelOption) {
+  if (option.image) return option.image
+  if (!option.regions) return ''
+
+  return `https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${option.id}_0.jpg`
+}
+
 function getOptionTheme(option: WheelOption, fallbackIndex: number) {
   if (option.regions) {
     return getChampionTheme({ id: option.id, regions: option.regions })
@@ -257,7 +264,7 @@ function App() {
           <div className="result-panel" aria-live="polite">
             <span>Resultado</span>
             <strong>{result?.label ?? (isSpinning ? 'Girando...' : 'Pronto para sortear')}</strong>
-            {result?.image && <img src={result.image} alt="" />}
+            {result && getOptionImage(result) && <img src={getOptionImage(result)} alt="" />}
           </div>
 
           <div className="history-card">
@@ -272,11 +279,14 @@ function App() {
               <ol>
                 {drawHistory.map((entry) => (
                   <li key={entry.id}>
-                    <strong>{entry.champion.label}</strong>
-                    <div className="build-list">
-                      {entry.build.map((item) => (
-                        <span key={item}>{item}</span>
-                      ))}
+                    {getOptionImage(entry.champion) && <img src={getOptionImage(entry.champion)} alt="" />}
+                    <div>
+                      <strong>{entry.champion.label}</strong>
+                      <div className="build-list">
+                        {entry.build.map((item) => (
+                          <span key={item}>{item}</span>
+                        ))}
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -389,7 +399,7 @@ function App() {
               <ul>
                 {filteredOptions.map((option) => (
                   <li key={option.id}>
-                    {option.image && <img src={option.image} alt="" />}
+                    {getOptionImage(option) && <img src={getOptionImage(option)} alt="" />}
                     <span>{option.label}</span>
                     <button type="button" onClick={() => removeOption(option.id)} aria-label="Remover">
                       x
@@ -405,7 +415,7 @@ function App() {
       {pendingRemoval && (
         <div className="modal-backdrop" role="presentation">
           <div className="result-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            {pendingRemoval.image && <img src={pendingRemoval.image} alt="" />}
+            {getOptionImage(pendingRemoval) && <img src={getOptionImage(pendingRemoval)} alt="" />}
             <span>Resultado sorteado</span>
             <h2 id="modal-title">{pendingRemoval.label}</h2>
             <p>Deseja remover essa opcao da roleta para o proximo giro?</p>
