@@ -167,14 +167,16 @@
 }
 
 .augment-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 8px;
 }
 
 .augment-list span {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
   border: 1px solid rgba(91, 214, 209, 0.45);
-  border-radius: 999px;
+  border-radius: 8px;
   color: #0f172a;
   background: rgba(91, 214, 209, 0.12);
   font-weight: 900;
@@ -471,19 +473,31 @@
 }
 
 .build-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 6px;
 }
 
 .build-list span {
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
   padding: 5px 8px;
   border: 1px solid rgba(212, 175, 55, 0.38);
-  border-radius: 999px;
+  border-radius: 8px;
   color: #334155;
   background: rgba(255, 255, 255, 0.7);
   font-size: 12px;
   font-weight: 800;
+}
+
+.build-list span img {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  object-fit: cover;
+  box-shadow: 0 5px 10px rgba(15, 23, 42, 0.14);
 }
 
 .control-panel {

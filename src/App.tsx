@@ -4,6 +4,7 @@ import { getChampionTheme } from './data/championThemes'
 import { champions, laneOptions, regionOptions } from './data/leagueChampions'
 import type { LaneKey, RegionKey } from './data/leagueChampions'
 import { getAramDisorderRecommendations, getRecommendedBuild } from './data/recommendedBuilds'
+import type { RecommendedEntry } from './data/recommendedBuilds'
 import './App.css'
 
 type WheelOption = {
@@ -17,7 +18,7 @@ type WheelOption = {
 type DrawHistoryEntry = {
   id: string
   champion: WheelOption
-  build: string[]
+  build: RecommendedEntry[]
 }
 
 type WheelLabelStyle = CSSProperties & {
@@ -281,7 +282,10 @@ function App() {
                 <h2>Build recomendada</h2>
                 <div className="build-list large">
                   {normalBuild.map((item) => (
-                    <span key={item}>{item}</span>
+                    <span key={item.label}>
+                      {item.image && <img src={item.image} alt="" />}
+                      {item.label}
+                    </span>
                   ))}
                 </div>
               </section>
@@ -291,7 +295,10 @@ function App() {
                 <h2>Itens recomendados</h2>
                 <div className="build-list large">
                   {aramDisorder.items.map((item) => (
-                    <span key={item}>{item}</span>
+                    <span key={item.label}>
+                      {item.image && <img src={item.image} alt="" />}
+                      {item.label}
+                    </span>
                   ))}
                 </div>
               </section>
@@ -301,7 +308,7 @@ function App() {
                 <h2>Aprimoramentos recomendados</h2>
                 <div className="augment-list">
                   {aramDisorder.augments.map((augment) => (
-                    <span key={augment}>{augment}</span>
+                    <span key={augment.label}>{augment.label}</span>
                   ))}
                 </div>
               </section>
@@ -381,7 +388,10 @@ function App() {
                       <strong>{entry.champion.label}</strong>
                       <div className="build-list">
                         {entry.build.map((item) => (
-                          <span key={item}>{item}</span>
+                          <span key={item.label}>
+                            {item.image && <img src={item.image} alt="" />}
+                            {item.label}
+                          </span>
                         ))}
                       </div>
                     </div>

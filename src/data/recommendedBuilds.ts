@@ -1,5 +1,107 @@
 import type { LaneKey } from './leagueChampions'
 
+const englishItemNames: Record<string, string> = {
+  'Mata-Craquens': 'Kraken Slayer',
+  'Gume do Infinito': 'Infinity Edge',
+  'Canhao Fumegante': 'Rapid Firecannon',
+  'Lembrete Mortal': 'Mortal Reminder',
+  'Anjo Guardiao': 'Guardian Angel',
+  'Companheiro de Luden': "Luden's Companion",
+  'Chama Sombria': 'Shadowflame',
+  'Capuz da Morte de Rabadon': "Rabadon's Deathcap",
+  'Cajado do Vazio': 'Void Staff',
+  'Ampulheta de Zhonya': "Zhonya's Hourglass",
+  Oportunidade: 'Opportunity',
+  'Gume do Anoitecer': 'Edge of Night',
+  'Rancor de Serylda': "Serylda's Grudge",
+  'Cutelo Negro': 'Black Cleaver',
+  'Danca da Morte': "Death's Dance",
+  'Cegar, o Cutelo Sombrio': 'The Brutalizer',
+  Sterak: "Sterak's Gage",
+  'Couraca do Defunto': "Dead Man's Plate",
+  'Jak Sho, o Inconstante': "Jak'Sho, The Protean",
+  'Armadura de Espinhos': 'Thornmail',
+  'Forca da Natureza': 'Force of Nature',
+  'Pressagio de Randuin': "Randuin's Omen",
+  'Regenerador de Pedra Lunar': 'Moonstone Renewer',
+  Redencao: 'Redemption',
+  'Turibulo Ardente': 'Ardent Censer',
+  'Bencao de Mikael': "Mikael's Blessing",
+  'Renovacao da Vigilia': 'Dawncore',
+  'Convergencia de Zeke': "Zeke's Convergence",
+  'Juramento do Cavaleiro': "Knight's Vow",
+  'Medalhao dos Solari de Ferro': 'Locket of the Iron Solari',
+  'Dente de Na Nashor': "Nashor's Tooth",
+  'Criador de Fendas': 'Riftmaker',
+  'Tormento de Liandry': "Liandry's Torment",
+  'Arco Axiomatico': 'Axiom Arc',
+  'Coracao Congelado': 'Frozen Heart',
+}
+
+const itemImageIds: Record<string, string> = {
+  'Mata-Craquens': '6672',
+  'Gume do Infinito': '3031',
+  'Canhao Fumegante': '3094',
+  'Lembrete Mortal': '3033',
+  'Anjo Guardiao': '3026',
+  'Companheiro de Luden': '6655',
+  'Chama Sombria': '4645',
+  'Capuz da Morte de Rabadon': '3089',
+  'Cajado do Vazio': '3135',
+  'Ampulheta de Zhonya': '3157',
+  Oportunidade: '6692',
+  'Gume do Anoitecer': '3814',
+  'Rancor de Serylda': '6694',
+  'Cutelo Negro': '3071',
+  'Danca da Morte': '6333',
+  'Cegar, o Cutelo Sombrio': '3134',
+  Sterak: '3053',
+  'Couraca do Defunto': '3742',
+  'Jak Sho, o Inconstante': '6665',
+  'Armadura de Espinhos': '3075',
+  'Forca da Natureza': '4401',
+  'Pressagio de Randuin': '3143',
+  'Regenerador de Pedra Lunar': '6617',
+  Redencao: '3107',
+  'Turibulo Ardente': '3504',
+  'Bencao de Mikael': '3222',
+  'Renovacao da Vigilia': '6620',
+  'Convergencia de Zeke': '3050',
+  'Juramento do Cavaleiro': '3109',
+  'Medalhao dos Solari de Ferro': '3190',
+  'Dente de Na Nashor': '3115',
+  'Criador de Fendas': '4633',
+  'Tormento de Liandry': '6653',
+  'Arco Axiomatico': '6696',
+  'Coracao Congelado': '3110',
+}
+
+const englishAugmentNames: Record<string, string> = {
+  'Alcance extra': 'Extra Range',
+  'Velocidade de ataque': 'Attack Speed',
+  'Dano critico': 'Critical Damage',
+  'Roubo de vida': 'Life Steal',
+  'Aceleracao de habilidade': 'Ability Haste',
+  'Explosao arcana': 'Arcane Burst',
+  'Mana sustentada': 'Sustained Mana',
+  'Penetracao magica': 'Magic Penetration',
+  Execucao: 'Execution',
+  Mobilidade: 'Mobility',
+  'Dano explosivo': 'Burst Damage',
+  'Reset de abate': 'Takedown Reset',
+  Tenacidade: 'Tenacity',
+  'Dano sustentado': 'Sustained Damage',
+  'Escudo em combate': 'Combat Shield',
+  'Vida maxima': 'Maximum Health',
+  'Resistencia adicional': 'Bonus Resistances',
+  'Controle de grupo': 'Crowd Control',
+  Regeneracao: 'Regeneration',
+  'Forca de cura e escudo': 'Heal and Shield Power',
+  'Protecao em area': 'Area Protection',
+  'Escudo em area': 'Area Shield',
+  'Cura em combate': 'Combat Healing',
+}
+
 const buildByStyle = {
   marksman: ['Mata-Craquens', 'Gume do Infinito', 'Canhao Fumegante', 'Lembrete Mortal', 'Anjo Guardiao'],
   mage: ['Companheiro de Luden', 'Chama Sombria', 'Capuz da Morte de Rabadon', 'Cajado do Vazio', 'Ampulheta de Zhonya'],
@@ -125,6 +227,11 @@ const championStyleOverrides: Record<string, keyof typeof buildByStyle> = {
   Zyra: 'mage',
 }
 
+export type RecommendedEntry = {
+  label: string
+  image?: string
+}
+
 function getChampionStyle(championId: string, lanes: LaneKey[] = []): keyof typeof buildByStyle {
   const style = championStyleOverrides[championId]
 
@@ -139,14 +246,29 @@ function getChampionStyle(championId: string, lanes: LaneKey[] = []): keyof type
 }
 
 export function getRecommendedBuild(championId: string, lanes: LaneKey[] = []) {
-  return buildByStyle[getChampionStyle(championId, lanes)]
+  return buildByStyle[getChampionStyle(championId, lanes)].map(formatItemName)
 }
 
 export function getAramDisorderRecommendations(championId: string, lanes: LaneKey[] = []) {
   const style = getChampionStyle(championId, lanes)
 
   return {
-    items: aramBuildByStyle[style],
-    augments: aramAugmentsByStyle[style],
+    items: aramBuildByStyle[style].map(formatItemName),
+    augments: aramAugmentsByStyle[style].map(formatAugmentName),
+  }
+}
+
+function formatItemName(item: string) {
+  const itemId = itemImageIds[item]
+
+  return {
+    label: `${item} (${englishItemNames[item] ?? item})`,
+    image: itemId ? `https://ddragon.leagueoflegends.com/cdn/15.24.1/img/item/${itemId}.png` : undefined,
+  }
+}
+
+function formatAugmentName(augment: string) {
+  return {
+    label: `${augment} (${englishAugmentNames[augment] ?? augment})`,
   }
 }
